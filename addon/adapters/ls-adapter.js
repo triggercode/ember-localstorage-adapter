@@ -310,6 +310,7 @@ const LSAdapter = DS.Adapter.extend(Ember.Evented, {
       var relationEmbeddedId = record[relationName];
       var relationProp  = adapter.relationshipProperties(type, relationName);
       var relationType  = relationProp.kind;
+      var foreignAdapter = store.adapterFor(relationName);
 
       var opts = {allowRecursive: false};
 
@@ -327,7 +328,7 @@ const LSAdapter = DS.Adapter.extend(Ember.Evented, {
        * In this case, cart belongsTo customer and its id is present in the
        * main payload. We find each of these records and add them to _embedded.
        */
-      if (relationEmbeddedId && LSAdapter.prototype.isPrototypeOf(adapter))
+      if (relationEmbeddedId && LSAdapter.prototype.isPrototypeOf(adapter) && foreignAdapter === adapter)
         {
           recordPromise = recordPromise.then(function(recordPayload) {
             var promise;
